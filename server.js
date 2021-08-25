@@ -4,28 +4,22 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 const axios = require("axios");
-const mongoose = require("mongoose");
-
+// const mongoose = require("mongoose");
 const PORT = process.env.PORT;
 const server = express();
 server.use(cors());
-
 server.use(express.json());
 
-mongoose.connect("mongodb://localhost:27017/books", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+const bookModel = require("./modules/model.js");
+const getData = require("./modules/getData.js");
+const addBook = require("./modules/addBook.js");
+const deleteBook = require("./modules/deleteBook.js");
+const updateBook = require("./modules/updateBook.js");
+const logger = require("./logger");
 
-//Schema
-const Book = new mongoose.Schema({
-  title: String,
-  description: String,
-  email: String,
-});
 
-//Model
-const bookModel = mongoose.model("book", Book);
+server.use(logger);
+
 
 function seedDataCollection() {
   const book1 = new bookModel({
@@ -51,154 +45,38 @@ function seedDataCollection() {
   });
 
   const book4 = new bookModel({
-
-mongoose.connect("mongodb://localhost:27017/books", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
-
-//Schema
-const Book = new mongoose.Schema({
-  title: String,
-  description: String,
-  email: String,
-});
-
-//Model
-const bookModel = mongoose.model("book", Book);
-
-
-
-function seedDataCollection() {
-  const book1 = new bookModel({
-    title:
-      "Numbers Don't Lie: 71 Stories to Help Us Understand the Modern World",
+    title: "The Man Who Mistook His Wife for a Hat",
     description:
-      "An essential guide to understanding how numbers reveal the true state of our world—exploring a wide range of topics including energy, the environment, technology, transportation, and food production.",
-    email: "olaaltaslaq@gmail.com",
-  });
-
-  
-
-  const book2 = new bookModel({
-    title: "Blue Ocean Strategy",
-    description:
-      "Drawing on more than a decade of new research, Blue Ocean Shift is the definitive guide to help you move beyond competing, inspire your people’s confidence, and seize new growth.",
-    email: "olaaltaslaq@gmail.com",
-  });
-
-  
-
-  const book3 = new bookModel({
-
-    title: "A Short History of Nearly Everything",
-    description:
-      "In Bryson's biggest book, he confronts his greatest challenge: to understand—and, if possible, answer—the oldest, biggest questions we have posed about the universe and ourselves.",
+      "The Man Who Mistook His Wife for a Hat and Other Clinical Tales is a 1985 book by neurologist Oliver Sacks describing the case histories of some of his patients.",
     email: "olaaltaslaq@gmail.com",
   });
 
   const book5 = new bookModel({
-    title: "A Short History of Nearly Earth",
+    title: "Origins: Fourteen Billion Years of Cosmic Evolution",
     description:
-      "In Bryson's biggest book, he confronts his greatest challenge: to understand—and, if possible, answer—the oldest, biggest questions we have posed about the universe and ourselves.",
+      "Origin's explores cosmic science's stunning new insights into the formation and evolution of our universe— of the cosmos, of galaxies and galaxy clusters, of stars within galaxies, of orbiting planets, and of different forms of life.",
     email: "olaaltaslaq@gmail.com",
   });
-
 
   book1.save();
   book2.save();
   book3.save();
-
   book4.save();
   book5.save();
 }
 
- seedDataCollection();
-
-server.get("/books", getData);
-
-function getData(req, res) {
-  let email = req.query.email;
-
-  bookModel.find({ email: email }, function (error, books) {
-    if (error) {
-      res.send("NO DATA :(");
-    } else {
-      // console.log(books);
-      res.send(books);
-    }
-  });
-}
+// seedDataCollection();
 
 
-server.post("/addbook", addBook);
-
-  function  addBook  (req, res)  {
-  let { email, title, description } = req.body;
-
-  bookModel.find({ email: email }, function (error, books) {
-    if (error) {
-      res.send("NO DATA :(");
-    } else {
-      books.push({
-        title,
-        description,
-      });
-     
-      books.save();
-      res.send(books);
-    }
-  });
-}
-
-server.delete("/deletebook/:i", deleteBook);
-
-// sendBookData = async (event) =>
-
- function deleteBook  (req, res)  {
-  let index = Number(req.params.i);
-
-  let email = req.query.email;
-  bookModel.find({ email: email }, (error, books) => {
-    if (error) {
-      res.send("NO DATA :(");
-    } else {
-      let books2 = books.filter((book, i2) => {
-        if (i2 !== index) {
-          return book;
-        }
-      });
-      // console.log(books2);
-      books = books2;
-      console.log(books[0]);
-          books.save();
-      res.send(books);
-    }
-  });
-}
-
-server.get("/", home);
+server.get("/", home); // HOME
+server.get("/books", getData); // getting the books data from the DB
+server.post("/addbook", addBook); // Adding new books
+server.delete("/deletebook/:id", deleteBook); // deleting books
+server.put('/updateBook/:id',updateBook);  // updating books
 
 function home(req, res) {
   res.send("home");
 }
-
-
-}
-
-seedDataCollection();
-
-
-
-server.get("/books", getData);
-
-function getData(req, res) {
-  bookModel.find(function (err, books) {
-    if (err) return console.error(err);
-    res.send(books);
-  });
-}
-
 
 server.listen(PORT, () => {
   console.log(`listening on PORT ${PORT}`);

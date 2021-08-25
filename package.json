@@ -18,13 +18,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Emam96/can-of-books-server.git"
+    "url": "git+https://github.com/olaaltaslaq/can-of-books-backend.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Emam96/can-of-books-server/issues"
+    "url": "https://github.com/olaaltaslaq/can-of-books-backend/issues"
   },
-  "homepage": "https://github.com/Emam96/can-of-books-server#readme"
+  "homepage": "https://github.com/olaaltaslaq/can-of-books-backend#readme"
 }
